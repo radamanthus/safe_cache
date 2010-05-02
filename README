@@ -1,0 +1,37 @@
+SafeCache
+=========
+
+SafeCache is a plugin to DRY up the begin/rescue wrappers around your cache access code. 
+
+Typically, you wrap your cache access code like this:
+
+begin
+  recent_books = Rails.cache.read("books-recent", Book.recent)
+rescue
+  recent_books = Book.recent
+  Rails.cache.write("books-recent", recent_books)
+end
+
+You do this to ensure that, in the event that the cache server is unavailable, your code will not raise an exception but instead degrade gracefully by falling back to accessing the database.
+
+SafeCache allows you to shorten the code above to:
+
+Book.safe_cache(:recent)
+
+Example
+=======
+
+How to best use it?
+- class methods without parameters
+- class methods with parameters
+- instance methods without parameters
+- instance methods with parameters
+
+How are cache keys computed?
+
+History
+=======
+SafeCache started as a module built for Devex.com to DRY up memcache code. In extracting the plugin, I changed the code to use Rails.cache instead of the direct memcached calls.
+This way it can support other cache storage mechanisms, like redis or MongoDB.
+
+Copyright (c) 2010 Radamanthus Batnag, released under the MIT license
