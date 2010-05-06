@@ -18,14 +18,28 @@ SafeCache allows you to shorten the code above to:
 
 Book.safe_cache(:recent)
 
-Example
+The other advantage of this to memcached plugins like cache_fu is it isn't tied to memcached. You can use redis, MongoDB, or any other cache storage that can be used by Rails.
+
+Installation
 =======
 
-How to best use it?
-- class methods without parameters
-- class methods with parameters
-- instance methods without parameters
-- instance methods with parameters
+script/plugin install git://github.com/radamanthus/safe_cache.git
+
+In your ActiveRecord model:
+
+class Book < ActiveRecord::Base
+	caches_safely
+end
+
+Example Usage
+=======
+
+On class methods:
+top_books = Book.cache_safely(:top, {:limit => 5})
+
+On instance methods:
+last_book = Book.last
+last_book_authors = last_book.cache_safely(:authors)
 
 How are cache keys computed?
 
